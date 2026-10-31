@@ -1,0 +1,39 @@
+/* ───────── PREVIEW ───────── */
+.preview-bg {
+  background: #fff;
+}
+.preview-window {
+  width: 400px;
+  background: var(--bg-panel);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.2s ease-out;
+}
+.preview-header {
+  height: var(--topbar-height);
+  background: var(--bg-header);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+
+/* ───────── PLUGIN PANELS ───────── */
+.plugin-panels-section {
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  height: 35%; 
+  min-height: 200px;
+  background: var(--bg-sidebar);
+  overflow-y: auto;
+}
+.plugin-container {
+  height: 100%;
+  width: 100%;
+}

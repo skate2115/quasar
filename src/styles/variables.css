@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --bg-app:     #09090b;
+  --bg-sidebar: #111113;
+  --bg-panel:   #161619;
+  --bg-header:  #111113;
+  --bg-hover:   #1f1f23;
+  
+  /* Klasyczny, głębszy niebieski (Tailwind Blue-600 / VS Code style) */
+  --accent:     #2563eb;
+  --accent-dim: rgba(37, 99, 235, 0.15);
+  
+  --text-main:  #f4f4f5;
+  --text-muted: #a1a1aa; 
+  --border:     #27272a;
+  --topbar-height: 35px; 
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --shadow-float: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="light"] {
+  --bg-app:     #f4f4f5;
+  --bg-sidebar: #fafafa;
+  --bg-panel:   #ffffff;
+  --bg-header:  #f4f4f5;
+  --bg-hover:   #e4e4e7;
+  
+  /* Jeszcze ciemniejszy dla idealnego kontrastu na białym tle (Tailwind Blue-700) */
+  --accent:     #1d4ed8;
+  --accent-dim: rgba(29, 78, 216, 0.12);
+  
+  --text-main:  #18181b;
+  --text-muted: #52525b;
+  --border:     #d4d4d8;
+  --shadow-float: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Kolorystyka typów plików */
+.default-color { color: #a1a1aa; }
+.folder-color { color: #3b82f6; } /* Przyciemnione ikony folderów */
+.html-color   { color: #f97316; }
+.css-color    { color: #2563eb; } /* Dopasowane do nowego akcentu */
+.js-color     { color: #eab308; }
+.ts-color     { color: #3178c6; }
+.json-color   { color: #cbd5e1; }
+.md-color     { color: #4ade80; }
+.py-color     { color: #2563eb; } /* Dopasowane do nowego akcentu */
+.rs-color     { color: #f97316; }
+.env-color    { color: #facc15; }
+.img-color    { color: #c084fc; }
+.db-color     { color: #3b82f6; }
+.java-color   { color: #fdba74; }
+.cpp-color    { color: #2563eb; } /* Dopasowane do nowego akcentu */
+.php-color    { color: #8b5cf6; }
+.go-color     { color: #2dd4bf; }
+.sh-color     { color: #4ade80; }
+.vue-color    { color: #10b981; }
+.svelte-color { color: #ff3e00; }

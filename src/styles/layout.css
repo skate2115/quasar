@@ -1,0 +1,116 @@
+.app-wrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.layout {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ───────── TOPBAR ───────── */
+.topbar {
+  height: var(--topbar-height);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-sidebar);
+  border-bottom: 1px solid var(--border);
+  user-select: none;
+  -webkit-app-region: drag;
+}
+
+.topbar-left {
+  display: flex; align-items: center; gap: 12px; padding: 0 14px; height: 100%;
+}
+
+.topbar-title {
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; 
+  color: var(--text-main); white-space: nowrap; display: flex; align-items: center;
+}
+
+.topbar-controls {
+  display: flex; height: 100%; -webkit-app-region: no-drag;
+}
+
+.topbar-controls button {
+  width: 46px; height: 100%; border: none; background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text-muted); transition: background 0.1s, color 0.1s;
+}
+
+.topbar-controls button:hover { background: var(--bg-hover); color: var(--text-main); }
+.topbar-controls .close-btn:hover { background: #e81123; color: white; }
+
+/* ───────── SIDEBAR ───────── */
+.sidebar {
+  width: 230px; background: var(--bg-sidebar); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; padding: 0; user-select: none;
+}
+
+.sidebar-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; height: 35px; border-bottom: 1px solid var(--border); 
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.section-title { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.06em; }
+
+.sidebar-actions { display: flex; gap: 6px; }
+.sidebar-actions button {
+  background: transparent; border: none; color: var(--text-muted); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; padding: 4px;
+  border-radius: var(--radius-sm); transition: var(--transition-fast);
+}
+.sidebar-actions button:hover { background: var(--bg-hover); color: var(--text-main); }
+
+.tree-scroll-container { flex: 1; overflow-y: auto; overflow-x: hidden; padding-top: 6px; }
+.tree-node-wrapper { display: flex; flex-direction: column; }
+.tree-node {
+  display: flex; align-items: center; gap: 6px; padding: 4px 12px 4px 4px;
+  font-size: 0.78rem; color: var(--text-muted); cursor: pointer;
+  transition: background 0.1s ease, color 0.1s ease; border-left: 2px solid transparent;
+}
+.tree-node:hover { background: var(--bg-hover); color: var(--text-main); }
+.tree-arrow { display: flex; align-items: center; justify-content: center; width: 14px; height: 14px; color: var(--text-muted); }
+.tree-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.sidebar.is-dragging, .sidebar.is-dragging * { cursor: grabbing !important; }
+.tree-node.dragging { opacity: 0.4; background: var(--bg-hover); }
+.tree-node.drag-over {
+  background: var(--accent-dim) !important;
+  border: 1px dashed var(--accent) !important; 
+  border-radius: var(--radius-sm);
+}
+.tree-node.active { background: var(--accent-dim); color: var(--text-main); border-left-color: var(--accent); }
+
+.empty-project-prompt {
+  font-size: 0.75rem; color: var(--text-muted); text-align: center;
+  padding: 30px 10px; line-height: 1.6; white-space: pre-line;
+}
+
+/* ───────── RESIZE HANDLES ───────── */
+.resize-handle {
+  width: 6px; background: var(--bg-app); border-left: 1px solid var(--border); border-right: 1px solid var(--border);
+  cursor: col-resize; display: flex; align-items: center; justify-content: center; -webkit-app-region: no-drag;
+}
+.resize-handle:hover, .resize-handle[data-resize-handle-state="drag"] { background: var(--accent-dim); border-color: var(--accent); }
+.resize-handle svg { opacity: 0; color: var(--text-muted); }
+.resize-handle:hover svg, .resize-handle[data-resize-handle-state="drag"] svg { opacity: 1; color: var(--accent); }
+
+.resize-handle-horizontal {
+  height: 6px; background: var(--bg-app); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  cursor: row-resize; display: flex; align-items: center; justify-content: center; -webkit-app-region: no-drag;
+}
+.resize-handle-horizontal:hover, .resize-handle-horizontal[data-resize-handle-state="drag"] { background: var(--accent-dim); border-color: var(--accent); }
+.resize-handle-horizontal svg { opacity: 0; color: var(--text-muted); }
+.resize-handle-horizontal:hover svg, .resize-handle-horizontal[data-resize-handle-state="drag"] svg { opacity: 1; color: var(--accent); }

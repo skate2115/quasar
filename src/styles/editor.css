@@ -1,0 +1,83 @@
+/* ───────── PANELS & TABS ───────── */
+.panel {
+  display: flex; flex-direction: column; background: var(--bg-panel); overflow: hidden; height: 100%;
+}
+.panel-header {
+  height: var(--topbar-height); display: flex; justify-content: space-between;
+  align-items: center; background: var(--bg-header); border-bottom: 1px solid var(--border);
+}
+.panel-content { flex: 1; display: flex; overflow: hidden; position: relative; }
+.no-file-screen {
+  display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;
+  color: var(--text-muted); font-size: 0.8rem; padding: 20px; text-align: center; user-select: none;
+}
+
+/* Tab dla nagłówków paneli np. "Preview" */
+.tab {
+  display: flex; align-items: center; gap: 6px; height: 100%; padding: 0 12px;
+  font-size: 0.75rem; color: var(--text-muted); border-right: 1px solid var(--border);
+}
+.tab.active {
+  color: var(--text-main); /* FIX: tekst zostaje biały, nie niebieski */
+  border-top: 2px solid var(--accent);
+  background: var(--bg-panel);
+}
+.tab.active svg { color: var(--accent); }
+
+/* Tabs dla otwartych plików */
+.tabs-bar {
+  display: flex; background: var(--bg-header); border-bottom: 1px solid var(--border);
+  overflow-x: auto; scrollbar-width: none;
+}
+.tabs-bar::-webkit-scrollbar { display: none; }
+
+.tab-item {
+  display: flex; align-items: center; gap: 8px; padding: 0 16px; height: var(--topbar-height); 
+  background: var(--bg-sidebar); border-right: 1px solid var(--border);
+  color: var(--text-muted); cursor: pointer; user-select: none;
+  font-size: 0.75rem; transition: var(--transition-fast); position: relative;
+}
+.tab-item:hover { background: var(--bg-hover); color: var(--text-main); }
+
+/* Aktywna zakładka: Tekst biały (text-main), niebieskie podkreślenie na dole */
+.tab-item.active { 
+  background: var(--bg-panel); 
+  color: var(--text-main); 
+  font-weight: 500; 
+}
+.tab-item.active::after {
+  content: ''; position: absolute; bottom: -1px; left: 0; right: 0;
+  height: 2px; background: var(--accent); box-shadow: 0 -2px 6px var(--accent-dim);
+}
+
+.tab-item.dragging {
+  opacity: 0.75; background: var(--bg-hover) !important; transform: scale(0.96); 
+  z-index: 10; cursor: grabbing !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Przycisk zamykania zakładki (Czerwony na hover nie gryzie się już z tekstem) */
+.tab-close-btn {
+  display: flex; align-items: center; justify-content: center; border: none; background: transparent;
+  color: inherit; border-radius: var(--radius-sm); padding: 2px; cursor: pointer; margin-left: 4px;
+  transition: var(--transition-fast);
+}
+.tab-close-btn:hover { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+
+.dirty-indicator {
+  width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%;
+  display: inline-block; flex-shrink: 0; margin-left: 2px; align-self: center;
+  transition: var(--transition-fast);
+}
+.tab-item.active .dirty-indicator { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+
+/* ───────── MONACO FIX & DECORATIONS ───────── */
+.monaco-editor, .monaco-editor .margin, .monaco-editor .monaco-editor-background, .monaco-editor .monaco-scrollable-element {
+  background: var(--bg-panel) !important;
+}
+.monaco-editor .view-lines { will-change: transform; }
+.monaco-editor, .monaco-editor .overflow-guard { border-radius: 0 !important; }
+.custom-search-highlight {
+  background-color: var(--accent-dim) !important;
+  border: 1px solid var(--accent);
+  border-radius: 2px;
+}
