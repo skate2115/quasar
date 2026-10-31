@@ -18,7 +18,19 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    "baseUrl": ".",
+    "paths": {
+      "@tauri-apps/api/window": ["src/tauri-mock/window.ts"],
+      "@tauri-apps/api/path": ["src/tauri-mock/path.ts"],
+      "@tauri-apps/api/core": ["src/tauri-mock/core.ts"],
+      "@tauri-apps/api": ["src/tauri-mock/index.ts"],
+      "@tauri-apps/plugin-fs": ["src/tauri-mock/fs.ts"],
+      "@tauri-apps/plugin-dialog": ["src/tauri-mock/dialog.ts"],
+      "@tauri-apps/plugin-shell": ["src/tauri-mock/shell.ts"],
+      "@tauri-apps/plugin-opener": ["src/tauri-mock/opener.ts"]
+    }
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

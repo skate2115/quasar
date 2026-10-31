@@ -1,5 +1,9 @@
-import React from "react";
-import { ChevronDown, File, FolderOpen, X, FolderX, Minus, Square, Settings, Check, Sidebar as SidebarIcon, Terminal as TerminalIcon, LayoutTemplate } from "lucide-react";
+import React, { useState } from "react";
+import { 
+  ChevronDown, ChevronRight, File, FolderOpen, X, FolderX, Minus, Square, 
+  Settings, Check, Sidebar as SidebarIcon, Terminal as TerminalIcon, LayoutTemplate, 
+  History, RotateCcw, Clock, Trash2 
+} from "lucide-react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { t, type Language } from "../i18n";
 
@@ -24,16 +28,25 @@ interface TopbarProps {
   setProjectPath: (path: string | null) => void;
   setProjectTree: React.Dispatch<React.SetStateAction<any[]>>;
   openSettings: () => void;
+  recentProjects?: string[];
+  openRecentProject?: (path: string) => void;
+  clearRecentProjects?: () => void;
+  autoSaveEnabled?: boolean;
+  setAutoSaveEnabled?: (val: boolean) => void;
+  revertToLastSaved?: () => void;
 }
 
 export default function Topbar({
   language, activeMenu, setActiveMenu, menuRef, projectPath, tabs, activePath,
   showSidebar, setShowSidebar, showPreview, setShowPreview, isTerminalOpen, setIsTerminalOpen,
   openFile, openFolder, closeTab, setTabs, setOpenFiles, setActivePath, setDirtyFiles, setProjectPath, setProjectTree, openSettings,
+  recentProjects = [], openRecentProject, clearRecentProjects, autoSaveEnabled = true, setAutoSaveEnabled, revertToLastSaved
 }: TopbarProps) {
-  
+  const [showRecentSubmenu, setShowRecentSubmenu] = useState(false);
+
   const toggleMenu = (menu: 'file' | 'view') => {
     setActiveMenu(activeMenu === menu ? null : menu);
+    setShowRecentSubmenu(false);
   };
 
   return (
@@ -48,13 +61,115 @@ export default function Topbar({
               {t("topbar.file", language)} <ChevronDown size={12} className={`dropdown-chevron ${activeMenu === 'file' ? "rotate" : ""}`} />
             </button>
             {activeMenu === 'file' && (
-              <div className="dropdown-menu">
+              <div className="dropdown-menu" style={{ minWidth: "210px" }}>
                 <button className="dropdown-item" onClick={() => { openFile(); setActiveMenu(null); }}>
                   <File size={14} className="dropdown-item-icon" /> {t("topbar.openFile", language)}
                 </button>
                 <button className="dropdown-item" onClick={() => { openFolder(); setActiveMenu(null); }}>
                   <FolderOpen size={14} className="dropdown-item-icon" /> {t("topbar.openFolder", language)}
                 </button>
+
+                {/* RECENT PROJECTS SUBMENU */}
+                <div 
+                  style={{ position: "relative" }}
+                  onMouseEnter={() => setShowRecentSubmenu(true)}
+                  onMouseLeave={() => setShowRecentSubmenu(false)}
+                >
+                  <button 
+                    className="dropdown-item" 
+                    onClick={() => setShowRecentSubmenu(prev => !prev)}
+                    style={{ justifyContent: "space-between" }}
+                  >
+                    <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                      <History size={14} className="dropdown-item-icon" /> {t("topbar.openRecent", language)}
+                    </span>
+                    <ChevronRight size={12} style={{ color: "var(--text-muted)" }} />
+                  </button>
+
+                  {showRecentSubmenu && (
+                    <div 
+                      className="dropdown-menu"
+                      style={{ 
+                        position: "absolute", 
+                        top: 0, 
+                        left: "100%", 
+                        marginLeft: "4px",
+                        minWidth: "220px",
+                        maxHeight: "260px",
+                        overflowY: "auto"
+                      }}
+                    >
+                      {recentProjects.length > 0 ? (
+                        <>
+                          {recentProjects.map((proj) => {
+                            const name = proj.split(/[\\/]/).filter(Boolean).pop() || proj;
+                            return (
+                              <button 
+                                key={proj} 
+                                className="dropdown-item"
+                                title={proj}
+                                onClick={() => {
+                                  openRecentProject?.(proj);
+                                  setActiveMenu(null);
+                                  setShowRecentSubmenu(false);
+                                }}
+                                style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                              >
+                                <Clock size={12} className="dropdown-item-icon" />
+                                <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{name}</span>
+                              </button>
+                            );
+                          })}
+                          <div className="context-divider" style={{ margin: "4px 5px" }} />
+                          <button 
+                            className="dropdown-item danger"
+                            onClick={() => {
+                              clearRecentProjects?.();
+                              setShowRecentSubmenu(false);
+                            }}
+                          >
+                            <Trash2 size={12} className="dropdown-item-icon" /> {t("topbar.clearRecent", language)}
+                          </button>
+                        </>
+                      ) : (
+                        <div style={{ padding: "8px 12px", fontSize: "0.75rem", color: "var(--text-muted)" }}>
+                          {t("topbar.noRecent", language)}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                <div className="context-divider" style={{ margin: "4px 5px" }}></div>
+
+                {/* AUTO-SAVE TOGGLE */}
+                <button 
+                  className="dropdown-item" 
+                  onClick={() => setAutoSaveEnabled?.(!autoSaveEnabled)}
+                  style={{ justifyContent: "space-between" }}
+                >
+                  <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                    <Check size={14} className="dropdown-item-icon" style={{ opacity: autoSaveEnabled ? 1 : 0 }} />
+                    {t("topbar.autoSave", language)}
+                  </span>
+                  <span style={{ fontSize: "0.68rem", color: autoSaveEnabled ? "var(--accent)" : "var(--text-muted)" }}>
+                    {autoSaveEnabled ? "ON" : "OFF"}
+                  </span>
+                </button>
+
+                {/* REVERT TO SAVED (SMART UNDO CHECKPOINT) */}
+                {activePath && (
+                  <button 
+                    className="dropdown-item"
+                    onClick={() => {
+                      revertToLastSaved?.();
+                      setActiveMenu(null);
+                    }}
+                  >
+                    <RotateCcw size={14} className="dropdown-item-icon" /> {t("topbar.revert", language)}
+                  </button>
+                )}
+
                 {(projectPath || tabs.length > 0) && <div className="context-divider" style={{ margin: "4px 5px" }}></div>}
                 
                 {tabs.length > 0 && (

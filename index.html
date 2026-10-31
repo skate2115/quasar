@@ -4,11 +4,26 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tauri + React + Typescript</title>
+    <title>Quasar Code Editor</title>
+    <meta name="description" content="A fast, minimalist code editor with multi-tab support, Monaco syntax highlighting, live web preview, and built-in terminal." />
+    <meta property="og:title" content="Quasar Code Editor" />
+    <meta property="og:description" content="A fast, minimalist code editor with multi-tab support, Monaco syntax highlighting, live web preview, and built-in terminal." />
+    <meta name="theme-color" content="#09090b" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Montserrat:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
   </head>
 
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
+        });
+      }
+    </script>
   </body>
 </html>

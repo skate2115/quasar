@@ -1,0 +1,6 @@
+{
+  "name": "Quasar Code Editor",
+  "description": "A fast, minimalist code editor with multi-tab support, Monaco syntax highlighting, live web preview, and built-in terminal.",
+  "permissions": [],
+  "capabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

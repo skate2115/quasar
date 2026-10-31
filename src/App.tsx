@@ -39,13 +39,15 @@ export default function App() {
     newItemName, setNewItemName, handleModalSubmit, openFile, openFolder,
     handleNodeClick, handleContextMenu, openCreationDialogTop,
     openCreationDialogContext, openRenameDialogContext, handleDeleteItem,
-    handleMoveNode, setContextMenu, handleOpenFileSuccess, expandedPaths, setProjectPath
+    handleMoveNode, setContextMenu, handleOpenFileSuccess, expandedPaths, setProjectPath,
+    recentProjects, openRecentProject, clearRecentProjects
   } = fileSystem;
 
   const {
     tabs, openFiles, activePath, dirtyFiles, draggedTab, setDraggedTab,
     setActivePath, closeTab, handleTabReorder, handleEditorChange, saveFile,
-    setTabs, setOpenFiles, setDirtyFiles
+    setTabs, setOpenFiles, setDirtyFiles,
+    autoSaveEnabled, setAutoSaveEnabled, revertToLastSaved
   } = tabsState;
 
   const {
@@ -71,6 +73,9 @@ export default function App() {
   const [language, setLanguage] = useState<Language>(defaultSettings.language);
   const [showPreview, setShowPreview] = useState(true);
 
+  // Referencja do aktywnego edytora Monaco dla formatowania kodu i zoomu
+  const activeEditorRef = useRef<any>(null);
+
   // 3. EFEKTY: ŁADOWANIE USTAWIEN Z APPDATA PRZY STARCIE
   useEffect(() => {
     loadSettings().then((settings) => {
@@ -78,8 +83,20 @@ export default function App() {
       setFontSize(settings.fontSize);
       setFontFamily(settings.fontFamily);
       setLanguage(settings.language);
+      if (settings.autoSave !== undefined) {
+        setAutoSaveEnabled(settings.autoSave);
+      }
     });
-  }, []);
+  }, [setAutoSaveEnabled]);
+
+  // Synchronizacja czcionki w czasie rzeczywistym z całym interfejsem
+  useEffect(() => {
+    if (fontFamily) {
+      document.documentElement.style.setProperty('--font-main', fontFamily);
+      document.documentElement.style.setProperty('--font-editor', fontFamily);
+      document.body.style.fontFamily = fontFamily;
+    }
+  }, [fontFamily]);
 
   const handleSaveSettings = async () => {
     const currentSettings = await loadSettings();
@@ -90,8 +107,16 @@ export default function App() {
       theme, 
       fontSize, 
       fontFamily, 
-      language 
+      language,
+      autoSave: autoSaveEnabled
     });
+  };
+
+  // FORMATOWANIE KODU (PRETTIER / MONACO BUILT-IN)
+  const formatDocument = () => {
+    if (activeEditorRef.current) {
+      activeEditorRef.current.getAction('editor.action.formatDocument')?.run();
+    }
   };
 
   const handleCrashReportSend = async (message: string) => {
@@ -100,8 +125,6 @@ export default function App() {
       stack: crashError?.stack, 
       userMessage: message 
     });
-    // Tutaj możesz wysłać do serwera
-    // await sendCrashReport({ error: crashError, message });
     setCrashError(null);
   };
 
@@ -152,9 +175,35 @@ export default function App() {
     }
   }, [tabs.length, projectPath, setProjectTree, projectTree.length]);
 
+  // OBSŁUGA SKRÓTÓW KLAWISZOWYCH (W TYM POWIĘKSZANIE CZCIONKI W LOCIE I FORMATOWANIE)
   useEffect(() => {
     const handleKeyDownCapture = (e: KeyboardEvent) => {
       const isCtrl = e.ctrlKey || e.metaKey;
+
+      // POWIĘKSZANIE / POMNIEJSZANIE CZCIONKI W LOCIE
+      if (isCtrl && (e.key === "=" || e.key === "+")) {
+        e.preventDefault();
+        setFontSize(s => Math.min(s + 1, 36));
+        return;
+      }
+      if (isCtrl && e.key === "-") {
+        e.preventDefault();
+        setFontSize(s => Math.max(s - 1, 9));
+        return;
+      }
+      if (isCtrl && e.key === "0") {
+        e.preventDefault();
+        setFontSize(14);
+        return;
+      }
+
+      // FORMATOWANIE DOKUMENTU: Shift + Alt + F
+      if (e.shiftKey && e.altKey && e.key.toLowerCase() === "f") {
+        e.preventDefault();
+        formatDocument();
+        return;
+      }
+
       if (isCtrl && e.shiftKey && e.key.toLowerCase() === "f") {
         e.preventDefault(); e.stopPropagation();
         setShowGlobalSearch(prev => !prev); setShowLocalSearch(false);
@@ -244,11 +293,19 @@ export default function App() {
   const editorContent = (
     <>
       {tabs.length > 0 && <TabsBar tabs={tabs} activePath={activePath} draggedTab={draggedTab} dirtyFiles={dirtyFiles} setDraggedTab={setDraggedTab} setActivePath={setActivePath} closeTab={closeTab} handleTabReorder={handleTabReorder} />}
-      {/* PRZEKAZUJEMY LANGUAGE DO LOCALSEARCHBAR */}
       {showLocalSearch && activePath && <LocalSearchBar language={language} showReplace={showReplace} setShowReplace={setShowReplace} localSearchQuery={localSearchQuery} setLocalSearchQuery={setLocalSearchQuery} replaceQuery={replaceQuery} setReplaceQuery={setReplaceQuery} setShowLocalSearch={setShowLocalSearch} handleReplace={handleReplace} handleReplaceAll={handleReplaceAll} inputRef={localSearchInputRef} />}
       <div className="panel-content">
         {activePath ? (
-          <CodeEditor value={openFiles[activePath] || ""} language={activeFileMeta?.language || "text"} onChange={handleEditorChange} searchQuery={localSearchQuery} theme={theme} fontSize={fontSize} />
+          <CodeEditor 
+            value={openFiles[activePath] || ""} 
+            language={activeFileMeta?.language || "text"} 
+            onChange={handleEditorChange} 
+            searchQuery={localSearchQuery} 
+            theme={theme} 
+            fontSize={fontSize} 
+            fontFamily={fontFamily}
+            onMountInstance={(editor) => { activeEditorRef.current = editor; }}
+          />
         ) : (
             <div className="no-file-screen">
               <span>{projectPath ? t("editor.empty.file", language) : t("editor.empty.folder", language)}</span>
@@ -267,6 +324,12 @@ export default function App() {
           showSidebar={showSidebar} setShowSidebar={setShowSidebar} showPreview={showPreview} setShowPreview={setShowPreview} isTerminalOpen={isTerminalOpen} setIsTerminalOpen={setIsTerminalOpen}
           openFile={openFile} openFolder={openFolder} closeTab={closeTab} setTabs={setTabs} setOpenFiles={setOpenFiles} setActivePath={setActivePath} setDirtyFiles={setDirtyFiles} setProjectPath={setProjectPath} setProjectTree={setProjectTree} 
           openSettings={() => setIsSettingsOpen(true)} 
+          recentProjects={recentProjects}
+          openRecentProject={openRecentProject}
+          clearRecentProjects={clearRecentProjects}
+          autoSaveEnabled={autoSaveEnabled}
+          setAutoSaveEnabled={setAutoSaveEnabled}
+          revertToLastSaved={revertToLastSaved}
         />
 
         {showGlobalSearch && <GlobalSearchPanel language={language} globalSearchQuery={globalSearchQuery} executeGlobalSearch={executeGlobalSearch} setShowGlobalSearch={setShowGlobalSearch} globalSearchResults={globalSearchResults} onResultClick={handleGlobalResultClick} />}
@@ -284,7 +347,6 @@ export default function App() {
                       <Panel defaultSize={50} minSize={20} className="panel">{editorContent}</Panel>
                       <PanelResizeHandle className="resize-handle"><GripVertical size={14} /></PanelResizeHandle>
                       <Panel defaultSize={50} minSize={20} className="panel">
-                        {/* PRZETŁUMACZONY TYTUŁ PREVIEW */}
                         <div className="panel-header"><div className="tab active"><Layout size={13} /><span>{t("preview.title", language)}</span></div></div>
                         <div className="panel-content preview-bg"><Preview code={previewCode} /></div>
                       </Panel>
@@ -314,7 +376,7 @@ export default function App() {
           projectPath={projectPath}
           errors={0}
           warnings={0}
-          onFormat={() => console.log("Formatting code...")}
+          onFormat={formatDocument}
         />
         
         <CreationModal 

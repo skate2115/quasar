@@ -188,12 +188,12 @@ export default function SettingsModal({
                   <div className="setting-item">
                     <label className="setting-label">{t("settings.fontFamily", language)}</label>
                     <CustomSelect value={fontFamily} onChange={(val) => setFontFamily(val)} options={[
-                      { label: "Monospace (Default)", value: "monospace" },
-                      { label: "Serif", value: "serif" },
+                      { label: "Montserrat (Recommended)", value: "Montserrat" },
+                      { label: "JetBrains Mono", value: "'JetBrains Mono', monospace" },
+                      { label: "Fira Code", value: "'Fira Code', monospace" },
+                      { label: "Monospace", value: "monospace" },
                       { label: "Sans-Serif", value: "sans-serif" },
                       { label: "Courier New", value: "'Courier New', monospace" },
-                      { label: "Fira Code", value: "'Fira Code', monospace" },
-                      { label: "JetBrains Mono", value: "'JetBrains Mono', monospace" },
                     ]} />
                   </div>
                 )}
@@ -220,6 +220,15 @@ export default function SettingsModal({
                   )}
                   {show("keys", [t("keybind.save", language), "save", "zapisz"]) && (
                     <div className="keybind-row"><span className="keybind-desc">{t("keybind.save", language)}</span><div className="keybind-keys"><span className="key">Ctrl</span><span className="key">S</span></div></div>
+                  )}
+                  {show("keys", ["zoom", "font", "powiększ"]) && (
+                    <div className="keybind-row"><span className="keybind-desc">{language === "pl" ? "Powiększ czcionkę w locie" : "Zoom In (Font Size)"}</span><div className="keybind-keys"><span className="key">Ctrl</span><span className="key">+</span></div></div>
+                  )}
+                  {show("keys", ["zoom", "font", "pomniejsz"]) && (
+                    <div className="keybind-row"><span className="keybind-desc">{language === "pl" ? "Pomniejsz czcionkę w locie" : "Zoom Out (Font Size)"}</span><div className="keybind-keys"><span className="key">Ctrl</span><span className="key">-</span></div></div>
+                  )}
+                  {show("keys", ["format", "prettier", "kod"]) && (
+                    <div className="keybind-row"><span className="keybind-desc">{language === "pl" ? "Formatuj dokument (Prettier)" : "Format Document"}</span><div className="keybind-keys"><span className="key">Shift</span><span className="key">Alt</span><span className="key">F</span></div></div>
                   )}
                 </div>
               </div>

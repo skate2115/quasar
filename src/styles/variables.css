@@ -1,6 +1,55 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+/* Offline-ready Montserrat font family with local system fallback */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Montserrat Regular'), local('Montserrat-Regular'), local('Montserrat');
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: local('Montserrat Medium'), local('Montserrat-Medium');
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Montserrat SemiBold'), local('Montserrat-SemiBold');
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Montserrat Bold'), local('Montserrat-Bold');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('JetBrains Mono'), local('JetBrainsMono-Regular');
+}
+@font-face {
+  font-family: 'Fira Code';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Fira Code'), local('FiraCode-Regular');
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Montserrat:ital,wght@0,300..800;1,300..800&display=swap');
 
 :root {
+  --font-main: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  --font-editor: 'Montserrat', monospace;
+
   --bg-app:     #09090b;
   --bg-sidebar: #111113;
   --bg-panel:   #161619;
@@ -55,9 +104,24 @@
 .img-color    { color: #c084fc; }
 .db-color     { color: #3b82f6; }
 .java-color   { color: #fdba74; }
-.cpp-color    { color: #2563eb; } /* Dopasowane do nowego akcentu */
-.php-color    { color: #8b5cf6; }
-.go-color     { color: #2dd4bf; }
+.cpp-color    { color: #00599c; }
+.c-color      { color: #5c6bc0; }
+.cs-color     { color: #9b4f96; }
+.php-color    { color: #8892bf; }
+.go-color     { color: #00add8; }
 .sh-color     { color: #4ade80; }
-.vue-color    { color: #10b981; }
+.ps-color     { color: #38bdf8; }
+.vue-color    { color: #41b883; }
 .svelte-color { color: #ff3e00; }
+.sass-color   { color: #cf649a; }
+.xml-color    { color: #f97316; }
+.yaml-color   { color: #cb171e; }
+.toml-color   { color: #9c4121; }
+.docker-color { color: #2496ed; }
+.rb-color     { color: #cc342d; }
+.swift-color  { color: #f05138; }
+.kt-color     { color: #7f52ff; }
+.dart-color   { color: #00d2b8; }
+.lua-color    { color: #000080; }
+.r-color      { color: #276dc3; }
+.graphql-color{ color: #e10098; }

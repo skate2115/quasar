@@ -8,14 +8,20 @@ export interface AppSettings {
   fontFamily: string;
   language: Language;
   disabledExtensions: string[];
+  autoSave: boolean;
+  autoSaveDelay: number;
+  recentProjects: string[];
 }
 
 export const defaultSettings: AppSettings = {
   theme: "dark",
   fontSize: 14,
-  fontFamily: "monospace",
+  fontFamily: "Montserrat",
   language: "en",
   disabledExtensions: [],
+  autoSave: true,
+  autoSaveDelay: 1500,
+  recentProjects: [],
 };
 
 // Używamy małych liter "quasar", aby folder pokrywał się z folderem "quasar/extensions" z ExtensionContext
