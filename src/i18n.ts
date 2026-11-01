@@ -1,6 +1,6 @@
 export const dictionaries = {
   en: {
-    // --- Ustawienia ---
+    // --- Settings ---
     "settings.title": "Settings",
     "settings.theme": "Theme",
     "settings.fontSize": "Editor Font Size (px)",
@@ -11,6 +11,10 @@ export const dictionaries = {
     "settings.language": "Editor Language",
     "settings.keybindings": "Keybindings",
     "settings.save": "Save & Close",
+    "lang.en": "English",
+    "lang.pl": "Polish",
+    "theme.dark": "Dark Theme (Default)",
+    "theme.light": "Light Theme (Default)",
     "keybind.preview": "Toggle Preview",
     "keybind.terminal": "Toggle Terminal",
     "keybind.search": "Global Search",
@@ -23,22 +27,28 @@ export const dictionaries = {
     "settings.cat.keys": "Keybindings",
     "settings.cat.extensions": "Extensions",
     "settings.noResults": "No settings found.",
-    
+
     // --- Crash Report ---
-    "crash.title": "Application Error",
+    "crash.title": "Application Diagnostics & Report",
     "crash.error": "Error Details",
     "crash.message": "Optional message (describe what happened)",
     "crash.placeholder": "What were you doing when this happened?",
     "crash.close": "Close",
     "crash.sendAndClose": "Send & Close",
     "crash.sending": "Sending...",
-    
-    // --- Rozszerzenia ---
+    "crash.paletteReportTitle": "User report from Command Palette",
+    "crash.systemReportTitle": "QUASAR Application System Error",
+    "crash.diagnostics": "Diagnostics & System Info",
+    "crash.copyDiagnostics": "Copy Diagnostics",
+    "crash.copied": "Copied to clipboard!",
+    "crash.savedSuccess": "Report saved in local diagnostics registry.",
+
+    // --- Extensions ---
     "settings.ext.openFolder": "Open Folder",
     "settings.ext.refresh": "Refresh",
     "settings.ext.empty": "No extensions found in the folder.",
 
-    // --- Topbar (Górne menu) ---
+    // --- Topbar ---
     "topbar.file": "FILE",
     "topbar.view": "VIEW",
     "topbar.settings": "Settings",
@@ -57,20 +67,55 @@ export const dictionaries = {
     "topbar.preview": "Live Preview",
     "topbar.commandPalette": "Command Palette...",
 
-    // --- Sidebar (Pasek boczny) ---
+    // --- Split Editor ---
+    "split.title": "Split Editor",
+    "split.horizontal": "Split Editor Horizontal",
+    "split.close": "Close Split Editor",
+    "split.empty": "Select a file to display in the secondary pane",
+    "split.badge": "Split",
+    "split.on": "Split: On",
+
+    // --- Focus Mode ---
+    "focus.toggle": "Focus Mode",
+    "focus.exit": "Exit Focus (Esc)",
+    "focus.tooltip": "Focus Mode (Esc / F11)",
+    "focus.badge": "Focus Mode",
+
+    // --- Breadcrumbs ---
+    "breadcrumbs.noFile": "No active file",
+    "breadcrumbs.splitTooltip": "Split Editor Horizontal",
+    "breadcrumbs.closeSplitTooltip": "Close Split",
+    "breadcrumbs.focusTooltip": "Focus Mode (F11)",
+    "breadcrumbs.exitFocusTooltip": "Exit Focus Mode (Esc)",
+
+    // --- Status Bar 2.0 ---
+    "status.unsaved": "unsaved",
+    "status.selected": "selected",
+    "status.lines": "lines",
+    "status.words": "words",
+    "status.spaces": "Spaces: 2",
+    "status.prettier": "Format Document (Prettier)",
+    "status.branch": "Git Branch: main",
+    "status.diagnostics": "Problems and Diagnostics",
+
+    // --- Drag & Drop ---
+    "drag.title": "Drop files or project folder here",
+    "drag.subtitle": "QUASAR will automatically load them into your workspace",
+
+    // --- Sidebar ---
     "sidebar.explorer": "EXPLORER",
     "sidebar.emptyProject": "Folder is empty.",
     "sidebar.emptyNoProject": "Open a folder to start.",
     "sidebar.newFile": "New File",
     "sidebar.newFolder": "New Folder",
 
-    // --- Menu Kontekstowe (Prawy przycisk myszy) ---
+    // --- Context Menu ---
     "menu.newFile": "New File",
     "menu.newFolder": "New Folder",
     "menu.rename": "Rename",
     "menu.delete": "Delete",
 
-    // --- Modale (Tworzenie i usuwanie) ---
+    // --- Modals ---
     "modal.create.file": "Create New File",
     "modal.create.folder": "Create New Folder",
     "modal.rename.title": "Rename Item",
@@ -78,7 +123,7 @@ export const dictionaries = {
     "modal.btn.confirm": "Confirm",
     "modal.btn.cancel": "Cancel",
 
-    // --- Edytor & Wyszukiwanie ---
+    // --- Editor & Search ---
     "editor.empty.file": "Select or create a file to start coding.",
     "editor.empty.folder": "Open a file, folder or drag a file here.",
     "search.global": "Search text in all project files...",
@@ -86,7 +131,7 @@ export const dictionaries = {
     "search.replace": "Replace with...",
     "search.noResults": "No results found.",
 
-    // --- Inne ---
+    // --- Other ---
     "terminal.title": "TERMINAL",
     "preview.title": "Preview",
   },
@@ -102,6 +147,10 @@ export const dictionaries = {
     "settings.language": "Język Edytora",
     "settings.keybindings": "Skróty klawiszowe",
     "settings.save": "Zapisz i zamknij",
+    "lang.en": "Angielski",
+    "lang.pl": "Polski",
+    "theme.dark": "Ciemny motyw (Domyślny)",
+    "theme.light": "Jasny motyw (Domyślny)",
     "keybind.preview": "Przełącz podgląd",
     "keybind.terminal": "Przełącz terminal",
     "keybind.search": "Wyszukiwanie globalne",
@@ -116,13 +165,19 @@ export const dictionaries = {
     "settings.noResults": "Brak ustawień dla tego zapytania.",
 
     // --- Crash Report ---
-    "crash.title": "Błąd Aplikacji",
+    "crash.title": "Diagnostyka i Raport Błędu",
     "crash.error": "Szczegóły błędu",
     "crash.message": "Opcjonalna wiadomość (opisz co się stało)",
     "crash.placeholder": "Co robiłeś, gdy się to stało?",
     "crash.close": "Zamknij",
     "crash.sendAndClose": "Wyślij i zamknij",
     "crash.sending": "Wysyłanie...",
+    "crash.paletteReportTitle": "Zgłoszenie użytkownika z Palety Poleceń",
+    "crash.systemReportTitle": "Błąd systemowy aplikacji QUASAR",
+    "crash.diagnostics": "Diagnostyka i informacje o systemie",
+    "crash.copyDiagnostics": "Kopiuj diagnostykę",
+    "crash.copied": "Skopiowano do schowka!",
+    "crash.savedSuccess": "Zgłoszenie zapisano w lokalnym rejestrze diagnostycznym.",
 
     // --- Rozszerzenia ---
     "settings.ext.openFolder": "Otwórz folder",
@@ -147,6 +202,41 @@ export const dictionaries = {
     "topbar.terminal": "Terminal",
     "topbar.preview": "Podgląd na żywo",
     "topbar.commandPalette": "Paleta poleceń...",
+
+    // --- Split Editor ---
+    "split.title": "Podział edytora",
+    "split.horizontal": "Podziel edytor poziomo",
+    "split.close": "Zamknij dzielenie edytora",
+    "split.empty": "Wybierz plik do wyświetlenia w drugim panelu",
+    "split.badge": "Podział",
+    "split.on": "Podział: Wł.",
+
+    // --- Focus Mode ---
+    "focus.toggle": "Tryb skupienia (Focus)",
+    "focus.exit": "Wyjdź ze skupienia (Esc)",
+    "focus.tooltip": "Tryb skupienia (Esc / F11)",
+    "focus.badge": "Tryb Skupienia",
+
+    // --- Breadcrumbs ---
+    "breadcrumbs.noFile": "Brak aktywnego pliku",
+    "breadcrumbs.splitTooltip": "Podziel edytor poziomo",
+    "breadcrumbs.closeSplitTooltip": "Zamknij podział",
+    "breadcrumbs.focusTooltip": "Tryb skupienia (F11)",
+    "breadcrumbs.exitFocusTooltip": "Wyjdź z trybu skupienia (Esc)",
+
+    // --- Status Bar 2.0 ---
+    "status.unsaved": "niezapisane",
+    "status.selected": "zaznaczono",
+    "status.lines": "linii",
+    "status.words": "słów",
+    "status.spaces": "Spacje: 2",
+    "status.prettier": "Formatuj dokument (Prettier)",
+    "status.branch": "Gałąź Git: main",
+    "status.diagnostics": "Problemy i diagnostyka",
+
+    // --- Drag & Drop ---
+    "drag.title": "Upuść pliki lub folder projektu tutaj",
+    "drag.subtitle": "QUASAR natychmiast załaduje zawartość do obszaru roboczego",
 
     // --- Sidebar (Pasek boczny) ---
     "sidebar.explorer": "EKSPLORATOR",
@@ -187,5 +277,5 @@ export type Language = keyof typeof dictionaries;
 export type TranslationKey = keyof typeof dictionaries.en;
 
 export function t(key: TranslationKey, lang: Language): string {
-  return dictionaries[lang][key] || dictionaries.en[key];
+  return dictionaries[lang]?.[key] || dictionaries.en[key] || key;
 }

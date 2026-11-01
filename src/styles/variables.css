@@ -76,17 +76,17 @@
   --bg-app:     #f8fafc;
   --bg-sidebar: #f1f5f9;
   --bg-panel:   #ffffff;
-  --bg-header:  #e2e8f0;
-  --bg-hover:   #cbd5e1;
+  --bg-header:  #f1f5f9;
+  --bg-hover:   #e2e8f0;
   
-  /* Czysty, nasycony błękit dla maksymalnej czytelności na jasnym tle */
+  /* Czysty, nasycony, dynamiczny błękit */
   --accent:     #2563eb;
-  --accent-dim: rgba(37, 99, 235, 0.12);
+  --accent-dim: rgba(37, 99, 235, 0.10);
   
-  --text-main:  #0f172a; /* Głęboki grafit - idealny kontrast */
-  --text-muted: #475569; /* Wyraźny szary tekst pomocniczy */
-  --border:     #cbd5e1; /* Ostre, widoczne linie podziału paneli */
-  --shadow-float: 0 16px 36px -4px rgba(15, 23, 42, 0.15), 0 4px 12px rgba(15, 23, 42, 0.08);
+  --text-main:  #0f172a; /* Głęboki grafit Slate-900 */
+  --text-muted: #64748b; /* Wyraźny szary Slate-500 */
+  --border:     #d8e2ec; /* Czyste, wyraziste linie podziału bez brudnego szarego */
+  --shadow-float: 0 16px 36px -4px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(15, 23, 42, 0.06);
 }
 
 /* Kolorystyka typów plików */

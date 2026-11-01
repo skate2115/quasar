@@ -78,12 +78,17 @@ export default function SettingsModal({
   };
 
   const themeOptions = [
-    { label: "Dark Theme (Default)", value: "dark" },
-    { label: "Light Theme (Default)", value: "light" },
+    { label: t("theme.dark", language), value: "dark" },
+    { label: t("theme.light", language), value: "light" },
     ...themesList.map(t => ({
       label: `${t.id.replace(/-/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}`, 
       value: t.id
     }))
+  ];
+
+  const languageOptions = [
+    { label: t("lang.en", language), value: "en" },
+    { label: t("lang.pl", language), value: "pl" }
   ];
 
   const match = (...keywords: string[]) => {
@@ -159,7 +164,7 @@ export default function SettingsModal({
                 {show("general", [t("settings.language", language), "language", "język"]) && (
                   <div className="setting-item">
                     <label className="setting-label">{t("settings.language", language)}</label>
-                    <CustomSelect value={language} onChange={(val) => setLanguage(val as Language)} options={[{ label: "English", value: "en" }, { label: "Polski", value: "pl" }]} />
+                    <CustomSelect value={language} onChange={(val) => setLanguage(val as Language)} options={languageOptions} />
                   </div>
                 )}
 

@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { 
   ChevronDown, ChevronRight, File, FolderOpen, X, FolderX, Minus, Square, 
   Settings, Check, Sidebar as SidebarIcon, Terminal as TerminalIcon, LayoutTemplate, 
-  History, RotateCcw, Clock, Trash2, Command 
+  History, RotateCcw, Clock, Trash2, Command, Save, Columns, Maximize2 
 } from "lucide-react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { t, type Language } from "../i18n";
+import { getFileName } from "../utils/pathUtils";
 
 interface TopbarProps {
   language: Language;
@@ -35,13 +36,18 @@ interface TopbarProps {
   autoSaveEnabled?: boolean;
   setAutoSaveEnabled?: (val: boolean) => void;
   revertToLastSaved?: () => void;
+  onToggleSplit?: () => void;
+  isSplitHorizontal?: boolean;
+  onToggleFocusMode?: () => void;
+  isFocusMode?: boolean;
 }
 
 export default function Topbar({
   language, activeMenu, setActiveMenu, menuRef, projectPath, tabs, activePath,
   showSidebar, setShowSidebar, showPreview, setShowPreview, isTerminalOpen, setIsTerminalOpen,
   openFile, openFolder, closeTab, setTabs, setOpenFiles, setActivePath, setDirtyFiles, setProjectPath, setProjectTree, openSettings, openCommandPalette,
-  recentProjects = [], openRecentProject, clearRecentProjects, autoSaveEnabled = true, setAutoSaveEnabled, revertToLastSaved
+  recentProjects = [], openRecentProject, clearRecentProjects, autoSaveEnabled = true, setAutoSaveEnabled, revertToLastSaved,
+  onToggleSplit, isSplitHorizontal, onToggleFocusMode, isFocusMode
 }: TopbarProps) {
   const [showRecentSubmenu, setShowRecentSubmenu] = useState(false);
 
@@ -103,7 +109,7 @@ export default function Topbar({
                       {recentProjects.length > 0 ? (
                         <>
                           {recentProjects.map((proj) => {
-                            const name = proj.split(/[\\/]/).filter(Boolean).pop() || proj;
+                            const name = getFileName(proj) || proj;
                             return (
                               <button 
                                 key={proj} 
@@ -147,15 +153,9 @@ export default function Topbar({
                 <button 
                   className="dropdown-item" 
                   onClick={() => setAutoSaveEnabled?.(!autoSaveEnabled)}
-                  style={{ justifyContent: "space-between" }}
                 >
-                  <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                    <Check size={14} className="dropdown-item-icon" style={{ opacity: autoSaveEnabled ? 1 : 0 }} />
-                    {t("topbar.autoSave", language)}
-                  </span>
-                  <span style={{ fontSize: "0.68rem", color: autoSaveEnabled ? "var(--accent)" : "var(--text-muted)" }}>
-                    {autoSaveEnabled ? "ON" : "OFF"}
-                  </span>
+                  <Save size={14} className="dropdown-item-icon" /> {t("topbar.autoSave", language)}
+                  {autoSaveEnabled && <Check size={14} className="dropdown-item-check" />}
                 </button>
 
                 {/* REVERT TO SAVED (SMART UNDO CHECKPOINT) */}
@@ -203,26 +203,31 @@ export default function Topbar({
             </button>
             {activeMenu === 'view' && (
               <div className="dropdown-menu">
-                <button className="dropdown-item" onClick={() => { openCommandPalette?.(); setActiveMenu(null); }}>
-                  <Command size={14} className="dropdown-item-icon" /> {t("topbar.commandPalette", language)}
-                  <span style={{ marginLeft: "auto", fontSize: "0.68rem", opacity: 0.6 }}>Ctrl+Shift+P</span>
-                </button>
-
-                <div className="context-divider" style={{ margin: "4px 5px" }}></div>
-
                 <button className="dropdown-item" onClick={() => { setShowSidebar(!showSidebar); setActiveMenu(null); }}>
                   <SidebarIcon size={14} className="dropdown-item-icon" /> {t("topbar.explorer", language)}
-                  {showSidebar && <Check size={14} style={{ marginLeft: "auto", color: "var(--accent)" }} />}
+                  {showSidebar && <Check size={14} className="dropdown-item-check" />}
                 </button>
                 
                 <button className="dropdown-item" onClick={() => { setIsTerminalOpen(!isTerminalOpen); setActiveMenu(null); }}>
                   <TerminalIcon size={14} className="dropdown-item-icon" /> {t("topbar.terminal", language)}
-                  {isTerminalOpen && <Check size={14} style={{ marginLeft: "auto", color: "var(--accent)" }} />}
+                  {isTerminalOpen && <Check size={14} className="dropdown-item-check" />}
                 </button>
                 
                 <button className="dropdown-item" onClick={() => { setShowPreview(!showPreview); setActiveMenu(null); }}>
                   <LayoutTemplate size={14} className="dropdown-item-icon" /> {t("topbar.preview", language)}
-                  {showPreview && <Check size={14} style={{ marginLeft: "auto", color: "var(--accent)" }} />}
+                  {showPreview && <Check size={14} className="dropdown-item-check" />}
+                </button>
+
+                <div className="context-divider" style={{ margin: "4px 5px" }}></div>
+
+                <button className="dropdown-item" onClick={() => { onToggleSplit?.(); setActiveMenu(null); }}>
+                  <Columns size={14} className="dropdown-item-icon" /> {t("split.horizontal", language)}
+                  {isSplitHorizontal && <Check size={14} className="dropdown-item-check" />}
+                </button>
+
+                <button className="dropdown-item" onClick={() => { onToggleFocusMode?.(); setActiveMenu(null); }}>
+                  <Maximize2 size={14} className="dropdown-item-icon" /> {t("focus.toggle", language)}
+                  {isFocusMode && <Check size={14} className="dropdown-item-check" />}
                 </button>
               </div>
             )}

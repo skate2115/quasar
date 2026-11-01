@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { 
   Command, Search, File, FolderOpen, Save, RotateCcw, CheckCheck, 
-  ZoomIn, ZoomOut, Maximize2, Sidebar, Terminal, LayoutTemplate, 
-  Sun, Moon, Settings, Bug, Plus, FolderPlus, X, FileCode2
+  ZoomIn, ZoomOut, Maximize2, Minimize2, Sidebar, Terminal, LayoutTemplate, 
+  Sun, Moon, Settings, Bug, Plus, FolderPlus, X, FileCode2, Columns
 } from "lucide-react";
 import { type Language } from "../i18n";
 
@@ -34,6 +34,10 @@ interface CommandPaletteProps {
   onToggleSidebar: () => void;
   onToggleTerminal: () => void;
   onTogglePreview: () => void;
+  onToggleSplit?: () => void;
+  isSplitHorizontal?: boolean;
+  onToggleFocusMode?: () => void;
+  isFocusMode?: boolean;
   onFindInFile: () => void;
   onFindInFiles: () => void;
   onToggleTheme: () => void;
@@ -66,6 +70,10 @@ export default function CommandPalette({
   onToggleSidebar,
   onToggleTerminal,
   onTogglePreview,
+  onToggleSplit,
+  isSplitHorizontal,
+  onToggleFocusMode,
+  isFocusMode,
   onFindInFile,
   onFindInFiles,
   onToggleTheme,
@@ -158,10 +166,9 @@ export default function CommandPalette({
         id: "close-active-tab",
         category: "file",
         categoryLabel: isPl ? "Plik" : "File",
-        title: isPl ? "Zamknij aktywną kartę" : "Close Active Tab",
-        description: isPl ? "Zamyka aktualnie edytowany plik" : "Close the currently active editor tab",
+        title: isPl ? "Zamknij aktywny plik" : "Close Active File",
+        description: isPl ? "Zamyka bieżącą zakładkę w edytorze" : "Close currently open tab in editor",
         icon: <X size={15} />,
-        shortcut: ["Ctrl", "W"],
         action: () => onCloseActiveTab?.(),
       },
       {
@@ -169,7 +176,7 @@ export default function CommandPalette({
         category: "file",
         categoryLabel: isPl ? "Plik" : "File",
         title: isPl ? "Zamknij wszystkie karty" : "Close All Tabs",
-        description: isPl ? "Zamyka wszystkie otwarte pliki" : "Close all open editor tabs",
+        description: isPl ? "Czyści cały edytor ze wszystkich otwartych plików" : "Close all open editor tabs",
         icon: <X size={15} />,
         action: () => onCloseAllTabs?.(),
       },
@@ -180,7 +187,7 @@ export default function CommandPalette({
         category: "edit",
         categoryLabel: isPl ? "Edycja" : "Edit",
         title: isPl ? "Formatuj dokument (Prettier)" : "Format Document (Prettier)",
-        description: isPl ? "Wyrównuje wcięcia, cudzysłowy i strukturę kodu" : "Format code with syntax parser and indentation",
+        description: isPl ? "Automatycznie układa i formatuje kod źródłowy" : "Automatically format source code using Prettier",
         icon: <CheckCheck size={15} />,
         shortcut: ["Shift", "Alt", "F"],
         action: onFormatDocument,
@@ -189,8 +196,8 @@ export default function CommandPalette({
         id: "find-in-file",
         category: "edit",
         categoryLabel: isPl ? "Edycja" : "Edit",
-        title: isPl ? "Znajdź w pliku..." : "Find in File...",
-        description: isPl ? "Wyszukiwanie i zamiana w aktywnym dokumencie" : "Search and replace in the current document",
+        title: isPl ? "Znajdź w pliku" : "Find in File",
+        description: isPl ? "Otwiera lokalny pasek wyszukiwania i zamiany" : "Open in-file search and replace widget",
         icon: <Search size={15} />,
         shortcut: ["Ctrl", "F"],
         action: onFindInFile,
@@ -199,44 +206,68 @@ export default function CommandPalette({
         id: "find-in-files",
         category: "edit",
         categoryLabel: isPl ? "Edycja" : "Edit",
-        title: isPl ? "Szukaj w projekcie (Global Search)..." : "Find in Project (Global Search)...",
-        description: isPl ? "Wyszukaj frazę we wszystkich plikach projektu" : "Search across all workspace files",
+        title: isPl ? "Szukaj w całym projekcie" : "Find in Files",
+        description: isPl ? "Wyszukuje frazę we wszystkich plikach roboczych" : "Search text across all project workspace files",
         icon: <Search size={15} />,
         shortcut: ["Ctrl", "Shift", "F"],
         action: onFindInFiles,
       },
+
+      // Kategoria: Widok (View)
+      {
+        id: "toggle-split",
+        category: "view",
+        categoryLabel: isPl ? "Widok" : "View",
+        title: isPl 
+          ? (isSplitHorizontal ? "Zamknij dzielenie edytora (Close Split)" : "Podziel edytor poziomo (Split Editor Horizontal)") 
+          : (isSplitHorizontal ? "Close Split Editor" : "Split Editor Horizontal"),
+        description: isPl ? "Wyświetla dwa panele edytora obok siebie do pracy z dwoma plikami" : "Show two editor panels side-by-side",
+        icon: <Columns size={15} />,
+        shortcut: ["Ctrl", "\\"],
+        action: () => onToggleSplit?.(),
+      },
+      {
+        id: "toggle-focus-mode",
+        category: "view",
+        categoryLabel: isPl ? "Widok" : "View",
+        title: isPl 
+          ? (isFocusMode ? "Wyjdź z trybu skupienia (Exit Focus Mode)" : "Włącz tryb skupienia (Focus Mode / Zen)") 
+          : (isFocusMode ? "Exit Focus Mode" : "Toggle Focus Mode (Zen)"),
+        description: isPl ? "Ukrywa wszystkie rozpraszacze, paski i powiększa edytor" : "Hide sidebars, panels and maximize editor space",
+        icon: isFocusMode ? <Minimize2 size={15} /> : <Maximize2 size={15} />,
+        shortcut: ["F11"],
+        action: () => onToggleFocusMode?.(),
+      },
       {
         id: "zoom-in",
-        category: "edit",
-        categoryLabel: isPl ? "Edycja" : "Edit",
+        category: "view",
+        categoryLabel: isPl ? "Widok" : "View",
         title: isPl ? "Powiększ czcionkę (Zoom In)" : "Zoom In (Font Size)",
-        description: isPl ? "Zwiększa rozmiar tekstu o 1px" : "Increase editor font size by 1px",
+        description: isPl ? "Zwiększa rozmiar czcionki w edytorze kodu" : "Increase font size of active code editor",
         icon: <ZoomIn size={15} />,
         shortcut: ["Ctrl", "+"],
         action: onZoomIn,
       },
       {
         id: "zoom-out",
-        category: "edit",
-        categoryLabel: isPl ? "Edycja" : "Edit",
+        category: "view",
+        categoryLabel: isPl ? "Widok" : "View",
         title: isPl ? "Pomniejsz czcionkę (Zoom Out)" : "Zoom Out (Font Size)",
-        description: isPl ? "Zmniejsza rozmiar tekstu o 1px" : "Decrease editor font size by 1px",
+        description: isPl ? "Zmniejsza rozmiar czcionki w edytorze kodu" : "Decrease font size of active code editor",
         icon: <ZoomOut size={15} />,
         shortcut: ["Ctrl", "-"],
         action: onZoomOut,
       },
       {
         id: "reset-zoom",
-        category: "edit",
-        categoryLabel: isPl ? "Edycja" : "Edit",
-        title: isPl ? "Zresetuj rozmiar czcionki" : "Reset Zoom",
-        description: isPl ? "Przywraca domyślny rozmiar 14px" : "Reset font size back to default 14px",
+        category: "view",
+        categoryLabel: isPl ? "Widok" : "View",
+        title: isPl ? "Zresetuj powiększenie (Reset Zoom)" : "Reset Zoom",
+        description: isPl ? "Przywraca domyślny rozmiar czcionki 14px" : "Reset font size to default 14px",
         icon: <Maximize2 size={15} />,
         shortcut: ["Ctrl", "0"],
         action: onResetZoom,
       },
-
-      // Kategoria: Widok (View)
       {
         id: "toggle-sidebar",
         category: "view",
@@ -264,6 +295,7 @@ export default function CommandPalette({
         title: isPl ? "Przełącz podgląd na żywo" : "Toggle Live Preview",
         description: isPl ? "Pokaż lub ukryj okno podglądu HTML/CSS" : "Show or hide HTML/CSS live rendering frame",
         icon: <LayoutTemplate size={15} />,
+        shortcut: ["Ctrl", "Alt", "P"],
         action: onTogglePreview,
       },
 
@@ -321,12 +353,12 @@ export default function CommandPalette({
   }, [
     isPl, onSaveFile, onRevertToSaved, autoSaveEnabled, onToggleAutoSave, 
     onOpenFile, onOpenFolder, onNewFile, onNewFolder, onCloseActiveTab, 
-    onCloseAllTabs, onFormatDocument, onFindInFile, onFindInFiles, onZoomIn, 
-    onZoomOut, onResetZoom, onToggleSidebar, onToggleTerminal, onTogglePreview, 
+    onCloseAllTabs, onFormatDocument, onFindInFile, onFindInFiles, 
+    onToggleSplit, isSplitHorizontal, onToggleFocusMode, isFocusMode,
+    onZoomIn, onZoomOut, onResetZoom, onToggleSidebar, onToggleTerminal, onTogglePreview, 
     currentTheme, onToggleTheme, onOpenSettings, onReportCrash, tabs, onSelectTab
   ]);
 
-  // Filtrowanie poleceń wg wpisanej frazy
   const filteredCommands = useMemo(() => {
     let cleanQuery = query.trim().toLowerCase();
     if (cleanQuery.startsWith(">")) {
@@ -356,7 +388,6 @@ export default function CommandPalette({
     }
   }, [isOpen]);
 
-  // Płynne przewijanie do zaznaczonego elementu
   useEffect(() => {
     if (listRef.current) {
       const activeElem = listRef.current.querySelector<HTMLElement>(".command-palette-item.active");
@@ -401,7 +432,7 @@ export default function CommandPalette({
             ref={inputRef}
             type="text"
             className="command-palette-input"
-            placeholder={isPl ? "Wpisz polecenie lub szukaj akcji... (np. motyw, zapisz, formatuj)" : "Type a command or search action... (e.g. theme, save, format)"}
+            placeholder={isPl ? "Wpisz polecenie lub szukaj akcji... (np. motyw, split, zapisz, formatuj)" : "Type a command or search action... (e.g. theme, split, save, format)"}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             spellCheck={false}
@@ -438,7 +469,10 @@ export default function CommandPalette({
                   <div className="command-palette-item-left">
                     <span className="command-palette-item-icon">{cmd.icon}</span>
                     <div className="command-palette-item-content">
-                      <span className="command-palette-item-title">{cmd.title}</span>
+                      <div className="command-palette-item-topline">
+                        <span className="command-palette-item-title">{cmd.title}</span>
+                        <span className="command-palette-category-badge">{cmd.categoryLabel}</span>
+                      </div>
                       {cmd.description && (
                         <span className="command-palette-item-desc">{cmd.description}</span>
                       )}
@@ -464,7 +498,9 @@ export default function CommandPalette({
             <span className="command-palette-hint"><kbd>↵</kbd> {isPl ? "uruchom" : "run"}</span>
             <span className="command-palette-hint"><kbd>esc</kbd> {isPl ? "zamknij" : "close"}</span>
           </div>
-          <span style={{ opacity: 0.7 }}>Quasar Studio</span>
+          <div className="command-palette-count">
+            {filteredCommands.length} {isPl ? "poleceń" : "commands"}
+          </div>
         </div>
       </div>
     </div>

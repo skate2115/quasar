@@ -1,8 +1,18 @@
 import { useRef, useEffect } from "react";
 import Editor, { useMonaco } from "@monaco-editor/react";
+import { computeLineDiff } from "../utils/diffGutter";
+
+export interface CursorInfo {
+  line: number;
+  col: number;
+  selectedChars: number;
+  lineCount: number;
+  wordCount: number;
+}
 
 interface CodeEditorProps {
   value: string;
+  baselineValue?: string;
   language: string;
   onChange: (value: string) => void;
   searchQuery?: string;
@@ -10,31 +20,106 @@ interface CodeEditorProps {
   fontSize: number;
   fontFamily?: string;
   onMountInstance?: (editor: any, monaco: any) => void;
+  onCursorChange?: (info: CursorInfo) => void;
 }
 
 export default function CodeEditor({ 
   value, 
+  baselineValue,
   language, 
   onChange, 
   searchQuery, 
   theme, 
   fontSize, 
   fontFamily,
-  onMountInstance
+  onMountInstance,
+  onCursorChange
 }: CodeEditorProps) {
   const editorRef = useRef<any>(null);
   const monaco = useMonaco();
   const decorationsRef = useRef<any>(null);
+  const diffDecorationsRef = useRef<any>(null);
+  const disposablesRef = useRef<Array<{ dispose: () => void }>>([]);
+
+  // Dispose listeners and collections on unmount
+  useEffect(() => {
+    return () => {
+      disposablesRef.current.forEach((d) => {
+        try {
+          d.dispose();
+        } catch {
+          // ignore
+        }
+      });
+      disposablesRef.current = [];
+
+      try {
+        decorationsRef.current?.clear();
+        diffDecorationsRef.current?.clear();
+      } catch {
+        // ignore
+      }
+    };
+  }, []);
+
+  const reportCursorStats = (editor: any) => {
+    if (!onCursorChange || !editor) return;
+    const model = editor.getModel();
+    if (!model) return;
+    const position = editor.getPosition() || { lineNumber: 1, column: 1 };
+    const selection = editor.getSelection();
+    let selectedChars = 0;
+    if (selection) {
+      const selectedText = model.getValueInRange(selection);
+      selectedChars = selectedText.length;
+    }
+    const fullText = model.getValue() || "";
+    const lineCount = model.getLineCount() || 1;
+    const wordCount = fullText.trim() ? (fullText.match(/\S+/g) || []).length : 0;
+
+    onCursorChange({
+      line: position.lineNumber,
+      col: position.column,
+      selectedChars,
+      lineCount,
+      wordCount
+    });
+  };
 
   const handleEditorDidMount = (editor: any, monacoInstance: any) => {
     editorRef.current = editor;
+
+    // Dispose any previous subscriptions before attaching new ones
+    disposablesRef.current.forEach((d) => {
+      try {
+        d.dispose();
+      } catch {
+        // ignore
+      }
+    });
+    disposablesRef.current = [];
+
     decorationsRef.current = editor.createDecorationsCollection([]);
+    diffDecorationsRef.current = editor.createDecorationsCollection([]);
+
     editor.updateOptions({
       fontSize: fontSize,
       fontFamily: fontFamily ? `${fontFamily}, monospace` : "'Montserrat', monospace",
       mouseWheelZoom: true,
       bracketPairColorization: { enabled: true }
     });
+
+    const posSub = editor.onDidChangeCursorPosition(() => {
+      reportCursorStats(editor);
+    });
+    disposablesRef.current.push(posSub);
+
+    const selSub = editor.onDidChangeCursorSelection(() => {
+      reportCursorStats(editor);
+    });
+    disposablesRef.current.push(selSub);
+
+    reportCursorStats(editor);
 
     if (onMountInstance) {
       onMountInstance(editor, monacoInstance);
@@ -304,6 +389,55 @@ export default function CodeEditor({
       editor.revealRangeInCenter(matches[0].range);
     }
   }, [searchQuery, value, monaco]);
+
+  // 4. WSKAŹNIKI ZMIAN W RYNNIE EDYTORA (GUTTER DIFF: ZIELONY DLA NOWYCH, NIEBIESKI DLA MODYFIKOWANYCH, CZERWONY DLA USUNIĘTYCH)
+  useEffect(() => {
+    if (!editorRef.current || !monaco || !diffDecorationsRef.current) return;
+    
+    // Jeśli brak bazowego tekstu lub brak zmian względem dysku -> czyścimy wskaźniki
+    if (baselineValue === undefined || baselineValue === null || baselineValue === value) {
+      diffDecorationsRef.current.clear();
+      return;
+    }
+
+    const diff = computeLineDiff(baselineValue, value);
+    const newDecorations: any[] = [];
+
+    diff.addedLines.forEach((line) => {
+      newDecorations.push({
+        range: new monaco.Range(line, 1, line, 1),
+        options: {
+          isWholeLine: true,
+          linesDecorationsClassName: "gutter-diff-added",
+          overviewRuler: { color: "#22c55e", position: monaco.editor.OverviewRulerLane.Left }
+        }
+      });
+    });
+
+    diff.modifiedLines.forEach((line) => {
+      newDecorations.push({
+        range: new monaco.Range(line, 1, line, 1),
+        options: {
+          isWholeLine: true,
+          linesDecorationsClassName: "gutter-diff-modified",
+          overviewRuler: { color: "#3b82f6", position: monaco.editor.OverviewRulerLane.Left }
+        }
+      });
+    });
+
+    diff.deletedLines.forEach((line) => {
+      newDecorations.push({
+        range: new monaco.Range(line, 1, line, 1),
+        options: {
+          isWholeLine: true,
+          linesDecorationsClassName: "gutter-diff-deleted",
+          overviewRuler: { color: "#ef4444", position: monaco.editor.OverviewRulerLane.Left }
+        }
+      });
+    });
+
+    diffDecorationsRef.current.set(newDecorations);
+  }, [value, baselineValue, monaco]);
 
   const activeThemeName = theme === "light" ? "quasar-light" : "quasar-dark";
 

@@ -82,3 +82,315 @@
   border: 1px solid var(--accent);
   border-radius: 2px;
 }
+
+/* ───────── LIGHT THEME TABS & EDITOR REFINEMENTS ───────── */
+[data-theme="light"] .tabs-bar {
+  background: #f1f5f9;
+  border-bottom: 1px solid var(--border);
+}
+[data-theme="light"] .tab-item {
+  background: #f1f5f9;
+  border-right: 1px solid var(--border);
+  color: var(--text-muted);
+}
+[data-theme="light"] .tab-item:hover {
+  background: #e2e8f0;
+  color: var(--text-main);
+}
+[data-theme="light"] .tab-item.active {
+  background: #ffffff;
+  color: var(--text-main);
+  font-weight: 600;
+  border-top: 2px solid var(--accent);
+  box-shadow: 0 -1px 4px rgba(37, 99, 235, 0.08);
+}
+[data-theme="light"] .tab-item.active::after {
+  background: var(--accent);
+  box-shadow: 0 -2px 6px rgba(37, 99, 235, 0.25);
+}
+[data-theme="light"] .tab.active {
+  background: #ffffff;
+  color: var(--text-main);
+  border-top: 2px solid var(--accent);
+  font-weight: 600;
+}
+[data-theme="light"] .dirty-indicator {
+  background: #f59e0b;
+}
+[data-theme="light"] .tab-item.active .dirty-indicator {
+  background: var(--accent);
+  box-shadow: 0 0 6px rgba(37, 99, 235, 0.6);
+}
+
+/* ───────── BREADCRUMBS ───────── */
+.editor-breadcrumbs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 27px;
+  padding: 0 10px;
+  background: var(--bg-header);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  user-select: none;
+  flex-shrink: 0;
+  z-index: 2;
+}
+
+[data-theme="light"] .editor-breadcrumbs {
+  background: #f8fafc;
+  border-bottom: 1px solid var(--border);
+}
+
+.breadcrumbs-path {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.breadcrumb-icon {
+  flex-shrink: 0;
+}
+
+.breadcrumb-sep {
+  opacity: 0.45;
+  margin: 0 1px;
+  flex-shrink: 0;
+}
+
+.breadcrumb-name {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.breadcrumb-active-file {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.breadcrumbs-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.breadcrumb-action-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 3px 6px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.breadcrumb-action-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-main);
+}
+
+.breadcrumb-action-btn.active {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+/* ───────── MONACO GUTTER DIFF INDICATORS ───────── */
+.gutter-diff-added {
+  border-left: 3px solid #22c55e !important;
+  margin-left: 1px;
+}
+
+.gutter-diff-modified {
+  border-left: 3px solid #3b82f6 !important;
+  margin-left: 1px;
+}
+
+.gutter-diff-deleted {
+  border-left: 3px solid #ef4444 !important;
+  margin-left: 1px;
+  position: relative;
+}
+
+.gutter-diff-deleted::after {
+  content: '';
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-top: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-left: 4px solid #ef4444;
+}
+
+/* ───────── SPLIT EDITOR ───────── */
+.split-pane {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.split-pane-header {
+  height: var(--topbar-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-header);
+  border-bottom: 1px solid var(--border);
+  padding: 0 10px;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.split-pane-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.split-pane-close {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 3px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.split-pane-close:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+/* ───────── STATUS BAR 2.0 ───────── */
+.status-bar {
+  height: 24px;
+  background: var(--bg-sidebar);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  user-select: none;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+[data-theme="light"] .status-bar {
+  background: #f1f5f9;
+  border-top: 1px solid var(--border);
+}
+
+.status-bar-left, .status-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 2px 7px;
+  border-radius: var(--radius-sm);
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  font-family: var(--font-main);
+}
+
+.status-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-main);
+}
+
+.status-btn.active {
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.focus-badge {
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 1px 8px;
+}
+
+.error-icon { color: #ef4444 !important; }
+.warning-icon { color: #f59e0b !important; }
+.status-changes {
+  color: #3b82f6 !important;
+  font-weight: 600;
+}
+
+/* ───────── DRAG & DROP OVERLAY ───────── */
+.drag-drop-global-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(6px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.drag-drop-card {
+  background: var(--bg-panel);
+  border: 2px dashed var(--accent);
+  border-radius: var(--radius-lg);
+  padding: 36px 54px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+}
+
+.drag-drop-icon {
+  color: var(--accent);
+}
+
+.drag-drop-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.drag-drop-subtitle {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
