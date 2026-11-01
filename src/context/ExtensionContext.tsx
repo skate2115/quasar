@@ -52,7 +52,6 @@ export function ExtensionProvider({ children }: { children: React.ReactNode }) {
   const applyGlobalTheme = (themeId: string, allThemes: any[]) => {
     const theme = allThemes.find(t => t.id === themeId);
     if (!theme || !theme.ui) {
-      document.documentElement.removeAttribute('style');
       return;
     }
     const root = document.documentElement;

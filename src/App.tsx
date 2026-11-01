@@ -25,7 +25,6 @@ import { useFileSystem } from "./hooks/useFileSystem";
 import { useSearch } from "./hooks/useSearch";
 
 // Importy dla zapisu, rozszerzeń i TŁUMACZEŃ
-import { ExtensionProvider } from "./context/ExtensionContext"; 
 import { loadSettings, saveSettings, defaultSettings } from "./utils/settingsManager";
 import { t, type Language } from "./i18n"; 
 
@@ -145,8 +144,16 @@ export default function App() {
     };
 
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      if (
+        !event.reason ||
+        event.reason.type === "cancelation" ||
+        event.reason === "Canceled" ||
+        String(event.reason).includes("Canceled")
+      ) {
+        event.preventDefault();
+        return;
+      }
       console.error("Unhandled promise rejection:", event.reason);
-      setCrashError(new Error(String(event.reason)));
     };
 
     window.addEventListener("error", handleError);
@@ -333,8 +340,7 @@ export default function App() {
   );
 
   return (
-    <ExtensionProvider>
-      <div className="app-wrapper" data-theme={theme}>
+    <div className="app-wrapper" data-theme={theme}>
         <Topbar 
           language={language}
           activeMenu={activeMenu} setActiveMenu={setActiveMenu} menuRef={menuRef} projectPath={projectPath} tabs={tabs} activePath={activePath} 
@@ -456,6 +462,5 @@ export default function App() {
           onSelectTab={(path) => setActivePath(path)}
         />
       </div>
-    </ExtensionProvider>
   );
 }
