@@ -33,17 +33,18 @@
 
 .tab-item {
   display: flex; align-items: center; gap: 8px; padding: 0 16px; height: var(--topbar-height); 
-  background: var(--bg-sidebar); border-right: 1px solid var(--border);
+  background: var(--bg-header); border-right: 1px solid var(--border);
   color: var(--text-muted); cursor: pointer; user-select: none;
   font-size: 0.75rem; transition: var(--transition-fast); position: relative;
 }
 .tab-item:hover { background: var(--bg-hover); color: var(--text-main); }
 
-/* Aktywna zakładka: Tekst biały (text-main), niebieskie podkreślenie na dole */
+/* Aktywna zakładka: Wyraźnie odcina się czystym tłem panelu i akcentem */
 .tab-item.active { 
   background: var(--bg-panel); 
   color: var(--text-main); 
-  font-weight: 500; 
+  font-weight: 600; 
+  border-top: 2px solid var(--accent);
 }
 .tab-item.active::after {
   content: ''; position: absolute; bottom: -1px; left: 0; right: 0;

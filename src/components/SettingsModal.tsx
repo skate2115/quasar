@@ -230,6 +230,9 @@ export default function SettingsModal({
                   {show("keys", ["format", "prettier", "kod"]) && (
                     <div className="keybind-row"><span className="keybind-desc">{language === "pl" ? "Formatuj dokument (Prettier)" : "Format Document"}</span><div className="keybind-keys"><span className="key">Shift</span><span className="key">Alt</span><span className="key">F</span></div></div>
                   )}
+                  {show("keys", ["palette", "paleta", "command", "poleceń"]) && (
+                    <div className="keybind-row"><span className="keybind-desc">{language === "pl" ? "Paleta poleceń (Command Palette)" : "Command Palette"}</span><div className="keybind-keys"><span className="key">Ctrl</span><span className="key">Shift</span><span className="key">P</span></div></div>
+                  )}
                 </div>
               </div>
             )}

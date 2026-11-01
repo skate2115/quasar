@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { 
   ChevronDown, ChevronRight, File, FolderOpen, X, FolderX, Minus, Square, 
   Settings, Check, Sidebar as SidebarIcon, Terminal as TerminalIcon, LayoutTemplate, 
-  History, RotateCcw, Clock, Trash2 
+  History, RotateCcw, Clock, Trash2, Command 
 } from "lucide-react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { t, type Language } from "../i18n";
@@ -28,6 +28,7 @@ interface TopbarProps {
   setProjectPath: (path: string | null) => void;
   setProjectTree: React.Dispatch<React.SetStateAction<any[]>>;
   openSettings: () => void;
+  openCommandPalette?: () => void;
   recentProjects?: string[];
   openRecentProject?: (path: string) => void;
   clearRecentProjects?: () => void;
@@ -39,7 +40,7 @@ interface TopbarProps {
 export default function Topbar({
   language, activeMenu, setActiveMenu, menuRef, projectPath, tabs, activePath,
   showSidebar, setShowSidebar, showPreview, setShowPreview, isTerminalOpen, setIsTerminalOpen,
-  openFile, openFolder, closeTab, setTabs, setOpenFiles, setActivePath, setDirtyFiles, setProjectPath, setProjectTree, openSettings,
+  openFile, openFolder, closeTab, setTabs, setOpenFiles, setActivePath, setDirtyFiles, setProjectPath, setProjectTree, openSettings, openCommandPalette,
   recentProjects = [], openRecentProject, clearRecentProjects, autoSaveEnabled = true, setAutoSaveEnabled, revertToLastSaved
 }: TopbarProps) {
   const [showRecentSubmenu, setShowRecentSubmenu] = useState(false);
@@ -202,6 +203,13 @@ export default function Topbar({
             </button>
             {activeMenu === 'view' && (
               <div className="dropdown-menu">
+                <button className="dropdown-item" onClick={() => { openCommandPalette?.(); setActiveMenu(null); }}>
+                  <Command size={14} className="dropdown-item-icon" /> {t("topbar.commandPalette", language)}
+                  <span style={{ marginLeft: "auto", fontSize: "0.68rem", opacity: 0.6 }}>Ctrl+Shift+P</span>
+                </button>
+
+                <div className="context-divider" style={{ margin: "4px 5px" }}></div>
+
                 <button className="dropdown-item" onClick={() => { setShowSidebar(!showSidebar); setActiveMenu(null); }}>
                   <SidebarIcon size={14} className="dropdown-item-icon" /> {t("topbar.explorer", language)}
                   {showSidebar && <Check size={14} style={{ marginLeft: "auto", color: "var(--accent)" }} />}
@@ -224,6 +232,14 @@ export default function Topbar({
       </div>
 
       <div className="topbar-controls" style={{ display: "flex", alignItems: "center" }}>
+        <button 
+          onClick={openCommandPalette} 
+          title="Command Palette (Ctrl+Shift+P)" 
+          className="command-palette-btn"
+          style={{ width: "38px" }}
+        >
+          <Command size={14} />
+        </button>
         <button onClick={openSettings} title={t("topbar.settings", language)} className="settings-btn"><Settings size={15} /></button>
         <button onClick={() => getCurrentWindow().minimize()}><Minus size={14} /></button>
         <button onClick={() => getCurrentWindow().toggleMaximize()}><Square size={12} /></button>

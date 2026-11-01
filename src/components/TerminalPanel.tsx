@@ -194,7 +194,7 @@ export default function TerminalPanel({ language, onClose, projectPath }: Termin
           overflowY: "auto", 
           fontFamily: "var(--font-mono)", 
           fontSize: "0.76rem", 
-          color: "#cbd5e1", 
+          color: "var(--text-main)", 
           display: "flex", 
           flexDirection: "column", 
           gap: "4px",
@@ -211,8 +211,8 @@ export default function TerminalPanel({ language, onClose, projectPath }: Termin
                 : line.type === "err" 
                 ? "#ef4444" 
                 : line.type === "info" 
-                ? "#64748b" 
-                : "inherit",
+                ? "var(--text-muted)" 
+                : "var(--text-main)",
               whiteSpace: "pre-wrap", 
               wordBreak: "break-all"
             }}

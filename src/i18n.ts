@@ -55,6 +55,7 @@ export const dictionaries = {
     "topbar.explorer": "Explorer",
     "topbar.terminal": "Terminal",
     "topbar.preview": "Live Preview",
+    "topbar.commandPalette": "Command Palette...",
 
     // --- Sidebar (Pasek boczny) ---
     "sidebar.explorer": "EXPLORER",
@@ -145,6 +146,7 @@ export const dictionaries = {
     "topbar.explorer": "Eksplorator",
     "topbar.terminal": "Terminal",
     "topbar.preview": "Podgląd na żywo",
+    "topbar.commandPalette": "Paleta poleceń...",
 
     // --- Sidebar (Pasek boczny) ---
     "sidebar.explorer": "EKSPLORATOR",

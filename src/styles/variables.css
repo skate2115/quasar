@@ -73,32 +73,32 @@
 }
 
 [data-theme="light"] {
-  --bg-app:     #f4f4f5;
-  --bg-sidebar: #fafafa;
+  --bg-app:     #f8fafc;
+  --bg-sidebar: #f1f5f9;
   --bg-panel:   #ffffff;
-  --bg-header:  #f4f4f5;
-  --bg-hover:   #e4e4e7;
+  --bg-header:  #e2e8f0;
+  --bg-hover:   #cbd5e1;
   
-  /* Jeszcze ciemniejszy dla idealnego kontrastu na białym tle (Tailwind Blue-700) */
-  --accent:     #1d4ed8;
-  --accent-dim: rgba(29, 78, 216, 0.12);
+  /* Czysty, nasycony błękit dla maksymalnej czytelności na jasnym tle */
+  --accent:     #2563eb;
+  --accent-dim: rgba(37, 99, 235, 0.12);
   
-  --text-main:  #18181b;
-  --text-muted: #52525b;
-  --border:     #d4d4d8;
-  --shadow-float: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  --text-main:  #0f172a; /* Głęboki grafit - idealny kontrast */
+  --text-muted: #475569; /* Wyraźny szary tekst pomocniczy */
+  --border:     #cbd5e1; /* Ostre, widoczne linie podziału paneli */
+  --shadow-float: 0 16px 36px -4px rgba(15, 23, 42, 0.15), 0 4px 12px rgba(15, 23, 42, 0.08);
 }
 
 /* Kolorystyka typów plików */
 .default-color { color: #a1a1aa; }
-.folder-color { color: #3b82f6; } /* Przyciemnione ikony folderów */
+.folder-color { color: #3b82f6; }
 .html-color   { color: #f97316; }
-.css-color    { color: #2563eb; } /* Dopasowane do nowego akcentu */
+.css-color    { color: #2563eb; }
 .js-color     { color: #eab308; }
 .ts-color     { color: #3178c6; }
 .json-color   { color: #cbd5e1; }
 .md-color     { color: #4ade80; }
-.py-color     { color: #2563eb; } /* Dopasowane do nowego akcentu */
+.py-color     { color: #2563eb; }
 .rs-color     { color: #f97316; }
 .env-color    { color: #facc15; }
 .img-color    { color: #c084fc; }
@@ -125,3 +125,16 @@
 .lua-color    { color: #000080; }
 .r-color      { color: #276dc3; }
 .graphql-color{ color: #e10098; }
+
+/* Przystosowanie kolorów ikon dla jasnego motywu, by nie zlewały się z tłem */
+[data-theme="light"] .default-color { color: #475569; }
+[data-theme="light"] .json-color   { color: #334155; }
+[data-theme="light"] .js-color     { color: #b45309; }
+[data-theme="light"] .env-color    { color: #b45309; }
+[data-theme="light"] .md-color     { color: #15803d; }
+[data-theme="light"] .sh-color     { color: #15803d; }
+[data-theme="light"] .ps-color     { color: #0284c7; }
+[data-theme="light"] .html-color   { color: #c2410c; }
+[data-theme="light"] .rs-color     { color: #c2410c; }
+[data-theme="light"] .java-color   { color: #c2410c; }
+[data-theme="light"] .img-color    { color: #9333ea; }

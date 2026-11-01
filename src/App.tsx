@@ -16,6 +16,7 @@ import TerminalPanel from "./components/TerminalPanel";
 import CreationModal from "./components/CreationModal";
 import SettingsModal from "./components/SettingsModal";
 import CrashReportModal from "./components/CrashReportModal";
+import CommandPalette from "./components/CommandPalette";
 import detectLang from "./utils/detectLang";
 import "./App.css";
 
@@ -63,6 +64,7 @@ export default function App() {
   const [showSidebar, setShowSidebar] = useState(true);
   const menuRef = useRef<HTMLDivElement>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
   const [previewCode, setPreviewCode] = useState("");
   const [crashError, setCrashError] = useState<Error | null>(null);
@@ -75,6 +77,13 @@ export default function App() {
 
   // Referencja do aktywnego edytora Monaco dla formatowania kodu i zoomu
   const activeEditorRef = useRef<any>(null);
+
+  const toggleTheme = async () => {
+    const next = theme === "light" ? "quasar-dark" : "light";
+    setTheme(next);
+    const current = await loadSettings();
+    await saveSettings({ ...current, theme: next });
+  };
 
   // 3. EFEKTY: ŁADOWANIE USTAWIEN Z APPDATA PRZY STARCIE
   useEffect(() => {
@@ -204,6 +213,14 @@ export default function App() {
         return;
       }
 
+      // COMMAND PALETTE: Ctrl + Shift + P, Ctrl + P lub F1
+      if ((isCtrl && e.shiftKey && e.key.toLowerCase() === "p") || (isCtrl && !e.shiftKey && e.key.toLowerCase() === "p") || e.key === "F1") {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsCommandPaletteOpen(prev => !prev);
+        return;
+      }
+
       if (isCtrl && e.shiftKey && e.key.toLowerCase() === "f") {
         e.preventDefault(); e.stopPropagation();
         setShowGlobalSearch(prev => !prev); setShowLocalSearch(false);
@@ -213,7 +230,7 @@ export default function App() {
         setShowGlobalSearch(false); setShowLocalSearch(prev => !prev);
       }
       else if (e.key === "Escape") {
-        setShowLocalSearch(false); setShowGlobalSearch(false); setShowReplace(false);
+        setShowLocalSearch(false); setShowGlobalSearch(false); setShowReplace(false); setIsCommandPaletteOpen(false);
       }
       else if (isCtrl && e.key === "`") {
         e.preventDefault(); e.stopPropagation();
@@ -324,6 +341,7 @@ export default function App() {
           showSidebar={showSidebar} setShowSidebar={setShowSidebar} showPreview={showPreview} setShowPreview={setShowPreview} isTerminalOpen={isTerminalOpen} setIsTerminalOpen={setIsTerminalOpen}
           openFile={openFile} openFolder={openFolder} closeTab={closeTab} setTabs={setTabs} setOpenFiles={setOpenFiles} setActivePath={setActivePath} setDirtyFiles={setDirtyFiles} setProjectPath={setProjectPath} setProjectTree={setProjectTree} 
           openSettings={() => setIsSettingsOpen(true)} 
+          openCommandPalette={() => setIsCommandPaletteOpen(true)}
           recentProjects={recentProjects}
           openRecentProject={openRecentProject}
           clearRecentProjects={clearRecentProjects}
@@ -404,6 +422,38 @@ export default function App() {
           onClose={() => setCrashError(null)}
           onSendAndClose={handleCrashReportSend}
           language={language}
+        />
+
+        <CommandPalette
+          isOpen={isCommandPaletteOpen}
+          onClose={() => setIsCommandPaletteOpen(false)}
+          language={language}
+          onOpenFile={openFile}
+          onOpenFolder={openFolder}
+          onSaveFile={() => { saveFile(); }}
+          onRevertToSaved={revertToLastSaved}
+          onToggleAutoSave={() => setAutoSaveEnabled(!autoSaveEnabled)}
+          autoSaveEnabled={autoSaveEnabled}
+          onFormatDocument={formatDocument}
+          onZoomIn={() => setFontSize(s => Math.min(s + 1, 36))}
+          onZoomOut={() => setFontSize(s => Math.max(s - 1, 9))}
+          onResetZoom={() => setFontSize(14)}
+          onToggleSidebar={() => setShowSidebar(prev => !prev)}
+          onToggleTerminal={() => setIsTerminalOpen(prev => !prev)}
+          onTogglePreview={() => setShowPreview(prev => !prev)}
+          onFindInFile={() => { setShowLocalSearch(true); setShowGlobalSearch(false); }}
+          onFindInFiles={() => { setShowGlobalSearch(true); setShowLocalSearch(false); }}
+          onToggleTheme={toggleTheme}
+          currentTheme={theme}
+          onOpenSettings={() => setIsSettingsOpen(true)}
+          onReportCrash={() => setCrashError(new Error("Zgłoszenie użytkownika z Palety Poleceń"))}
+          onNewFile={() => openCreationDialogTop("file")}
+          onNewFolder={() => openCreationDialogTop("folder")}
+          onCloseActiveTab={() => activePath && closeTab(activePath)}
+          onCloseAllTabs={() => { setTabs([]); setActivePath(null); }}
+          tabs={tabs}
+          activePath={activePath}
+          onSelectTab={(path) => setActivePath(path)}
         />
       </div>
     </ExtensionProvider>
